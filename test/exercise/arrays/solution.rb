@@ -16,22 +16,22 @@ module Exercise
         result
       end
 
-      def search(array, element)
+      def search(array, item)
         bs_iter = lambda do |array_slice, indexes|
           return -1 if array_slice.empty?
 
           middle_item_index = indexes.size / 2
-          middle_element = array_slice[middle_item_index]
+          middle_item = array_slice[middle_item_index]
 
-          return indexes[middle_item_index] if element == middle_element
+          return indexes[middle_item_index] if item == middle_item
 
           left_bound_index = 0
           right_bound_index = indexes[-1]
           return -1 if left_bound_index == right_bound_index
 
-          if element > middle_element
+          if item > middle_item
             left_bound_index = middle_item_index + 1
-          elsif element < middle_element
+          elsif item < middle_item
             right_bound_index = middle_item_index - 1
           end
           return bs_iter.call(
