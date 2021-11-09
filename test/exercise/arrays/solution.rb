@@ -13,22 +13,24 @@ module Exercise
         array.map { |item| item.positive? ? max : item }
       end
 
-      def search(array, item)
-        bs_iter = lambda do |left_bound_index, right_bound_index|
-          return -1 if array.empty? || left_bound_index > right_bound_index
+      def search(array, item, bounds = [])
+        left_bound_index, right_bound_index = if bounds.empty?
+                                                [0, array.size - 1]
+                                              else
+                                                [bounds[0], bounds[1]]
+                                              end
 
-          middle_item_index = (left_bound_index + right_bound_index) / 2
-          middle_item = array[middle_item_index]
+        return -1 if array.empty? || left_bound_index > right_bound_index
 
-          return middle_item_index if item == middle_item
+        middle_item_index = (left_bound_index + right_bound_index) / 2
+        middle_item = array[middle_item_index]
 
-          left_bound_index = middle_item_index + 1 if item > middle_item
-          right_bound_index = middle_item_index - 1 if item < middle_item
+        return middle_item_index if item == middle_item
 
-          return bs_iter.call(left_bound_index, right_bound_index)
-        end
+        left_bound_index = middle_item_index + 1 if item > middle_item
+        right_bound_index = middle_item_index - 1 if item < middle_item
 
-        bs_iter.call(0, array.size - 1)
+        search(array, item, [left_bound_index, right_bound_index])
       end
     end
   end
