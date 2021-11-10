@@ -5,15 +5,12 @@ module Exercise
       # Использовать свои написанные функции для реализации следующих - можно.
 
       # Написать свою функцию my_each
-      def my_each
-        iter = lambda do |(first, *rest)|
-          yield first
+      def my_each(&block)
+        first, *rest = self
+        return if first.nil?
 
-          return if rest.empty?
-
-          return iter.call(rest)
-        end
-        iter.call(self)
+        yield first
+        self.class.new(rest).my_each(&block)
         self
       end
 
@@ -28,14 +25,13 @@ module Exercise
       end
 
       # Написать свою функцию my_reduce
-      def my_reduce(start_value = nil, &block)
-        iter = lambda do |result, (head, *tail)|
-          return block.call(result, head) if tail.empty?
+      def my_reduce(result = nil, &block)
+        array = result.nil? ? self[1..] : self
+        new_result = result || first
+        head, *tail = array
+        return new_result if head.nil? && tail.empty?
 
-          return iter.call(block.call(result, head), tail)
-        end
-
-        iter.call(start_value || first, start_value.nil? ? self[1..] : self)
+        self.class.new(tail).my_reduce(block.call(new_result, head), &block)
       end
     end
   end
