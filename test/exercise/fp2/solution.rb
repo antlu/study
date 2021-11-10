@@ -29,10 +29,13 @@ module Exercise
 
       # Написать свою функцию my_reduce
       def my_reduce(start_value = nil, &block)
-        result = start_value || first
-        array = start_value.nil? ? self[1..] : self
-        array.my_each { |e| result = block.call(result, e) }
-        result
+        iter = lambda do |result, (head, *tail)|
+          return block.call(result, head) if tail.empty?
+
+          return iter.call(block.call(result, head), tail)
+        end
+
+        iter.call(start_value || first, start_value.nil? ? self[1..] : self)
       end
     end
   end
