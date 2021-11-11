@@ -27,10 +27,10 @@ module Exercise
       # Написать свою функцию my_reduce
       def my_reduce(result = nil, &block)
         array = result.nil? ? self[1..] : self
+        return result if array.empty?
+
         new_result = result || first
         head, *tail = array
-        return new_result if head.nil? && tail.empty?
-
         self.class.new(tail).my_reduce(block.call(new_result, head), &block)
       end
     end
